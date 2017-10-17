@@ -1,7 +1,8 @@
 
 >大道如青天，我独不得出
 
-#####前言
+##### 前言
+
 在上一篇[iOS Core ML与Vision初识](http://www.jianshu.com/p/b0e5f2944b3d)中，初步了解到了`vision`的作用，并在文章最后留了个疑问，就是类似下面的一些函数有什么用
 ```
 - (instancetype)initWithCIImage:(CIImage *)image options:(NSDictionary<VNImageOption, id> *)options;
@@ -9,6 +10,7 @@
 - (instancetype)initWithCVPixelBuffer:(CVPixelBufferRef)pixelBuffer options:(NSDictionary<VNImageOption, id> *)options;
 ```
 在查阅一些资料后，最终通过这些函数得到了如下的效果
+
 
 ![face.gif](http://upload-images.jianshu.io/upload_images/2525768-c45ee7c16299c64a.gif?imageMogr2/auto-orient/strip)
 对，没错，这就是通过`initWithCVPixelBuffer`函数来实现的。当然`vision`的作用远不于此，还有如下的效果
@@ -21,7 +23,7 @@
 7、人脸面部特征检测
 由于对人脸识别比较感兴趣，所以这里就主要简单了解了下人脸部分，下面就针对人脸检测和面部检测写写
 
-#####Vision支持的图片类型
+##### Vision支持的图片类型
 通过查看`VNRequestHandler.h`文件，我们可以看到里面的所有初始化函数，通过这些初始化函数，我们可以了解到支持的类型有：
 1、`CVPixelBufferRef`
 2、`CGImageRef`
@@ -29,7 +31,7 @@
 4、`NSURL`
 5、`NSData`
 
-#####Vision使用
+##### Vision使用
 在使用`vision`的时候，我们首先需要明确自己需要什么效果，然后根据想要的效果来选择不同的类，最后实现自己的效果
 1、需要一个`RequestHandler`，在创建`RequestHandler`的时候，需要一个合适的输入源，及`图片`类型
 2、需要一个`Request `，在创建`Request `的时候，也需要根据实际情况来选择，`Request `大概有如下这么些
@@ -45,7 +47,7 @@
 
 在完成上述步骤后，我们就可以根据结果来实现一些我们想要的效果
 
-#####人脸矩形检测
+##### 人脸矩形检测
 这里我们需要用到`VNDetectFaceRectanglesRequest`
 ```
 requset = [[VNDetectFaceRectanglesRequest alloc] initWithCompletionHandler:completionHandler];
@@ -110,7 +112,7 @@ requset = [[VNDetectFaceRectanglesRequest alloc] initWithCompletionHandler:compl
 
 ![faceRect.jpg](http://upload-images.jianshu.io/upload_images/2525768-a5febef321afbcaf.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
-#####人脸特征识别
+##### 人脸特征识别
 这里我们需要用到`VNDetectFaceLandmarksRequest`
 ```
             requset = [[VNDetectFaceLandmarksRequest alloc] initWithCompletionHandler:completionHandler];
@@ -212,7 +214,7 @@ CGPoint point = faceLandMarkRegion2D.normalizedPoints[i];
 ![faceLandmark.png](http://upload-images.jianshu.io/upload_images/2525768-8560904c9eaf5f52.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 
-#####动态人脸矩形检测
+##### 动态人脸矩形检测
 要动态来检测，那么我们肯定需要通过相机来实时取出资源，然后再实现，所以我们这里选择了`AVCapture`，关于相机的初始化及使用方法这里就不在累赘了，我们直接上代码
 在`AVCaptureVideoDataOutputSampleBufferDelegate`中，通过下面的方法
 ```
@@ -456,7 +458,7 @@ faceObservation.boundingBox.origin.y * image.size.height + point.y * rectHeight
 最后终于大功告成！
 效果就是文章最顶的那个效果
 
-#####注意
+##### 注意
 1、在使用过程中，我发现当检测图片的时候内存和`cpu`的消耗还是很高的，比如我的`5s`就成功的崩溃过.....
 2、图片方向是有要求的....
 ```
@@ -474,5 +476,5 @@ faceObservation.boundingBox.origin.y * image.size.height + point.y * rectHeight
 ```
 通过对比上面两个函数，我们可以发现，多了一个`CGImagePropertyOrientation `类型的参数，没错，这就是指定传入图片的方向，如果指定了方向，而图片方向却不一致，那么恭喜你，检测不出来....这里我用的都是第一个方法，及没有参数，好像默认是`up`的。
 
-#####最后
+##### 最后
 还是附上[Demo](https://github.com/gao211326/VisionDemo)，如果觉得还行的话，欢迎大家给个`star`！有什么问题，可以多多沟通
